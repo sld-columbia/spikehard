@@ -23,7 +23,7 @@ This will output a test that can be run as follows:
 ```bash
 pytest -o log_cli=True -s -v --log-cli-level=DEBUG hardware/tb/tests/networks/altered/vmm_o/test_vmm_o_32.py
 ```
-Please note that these Python tests require the Icarus Verilog simulator to be installed (e.g. via `sudo apt install iverilog`). And it also requires `myhdl` bindings to be built, which is automically done by `script/install_env.sh`, but can also be done as follows:
+Please note that these Python tests require the Icarus Verilog simulator to be installed (e.g. via `sudo apt install iverilog`). And it also requires `myhdl` bindings to be built, which is automatically done by `script/install_env.sh`, but can also be done as follows:
 ```bash
 cd hardware/tb/iverilog
 make clean
