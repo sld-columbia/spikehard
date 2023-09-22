@@ -1,0 +1,9 @@
+myhdl
+pytest
+pytest-xdist
+bitstring
+ortools
+numpy
+scipy
+matplotlib
+click

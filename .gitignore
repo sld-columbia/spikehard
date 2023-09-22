@@ -1,0 +1,16 @@
+/hardware/util/synthesised_socs
+/hardware/tb/memory_files/altered/__minimise_tick_delay_model__
+/hardware/tb/tests/networks/altered/__minimise_tick_delay_model__
+hls-work-virtex7
+hls-work-virtexup
+*.o
+*.vpi
+*.vcd
+*.pyc
+__pycache__
+/.python
+*.egg
+*.egg-info
+build
+.vscode
+.ipynb_checkpoints

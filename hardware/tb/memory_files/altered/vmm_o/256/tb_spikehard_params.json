@@ -1,0 +1,22 @@
+{
+	"grid_dimension_x": 2,
+	"grid_dimension_y": 2,
+	"output_core_x_coordinate": 0,
+	"output_core_y_coordinate": 0,
+	"num_outputs": 16,
+	"num_neurons": 256,
+	"num_axons": 256,
+	"num_ticks": 16,
+	"num_weights": 4,
+	"num_reset_modes": 2,
+	"potential_width": 9,
+	"weight_width": 9,
+	"leak_width": 9,
+	"threshold_width": 9,
+	"max_dimension_x": 512,
+	"max_dimension_y": 512,
+	"clock_cycles_per_tick": 74534,
+	"num_ticks_to_check": 30,
+	"tick_latency": 3,
+	"relax_packet_ordering": true
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld>
+  <accelerator name="spikehard" desc="Accelerator SpikeHard" data_size="4" device_id="04a" hls_tool="rtl">
+    <param name="rx_size" desc="rx_size" />
+    <param name="tx_size" desc="tx_size" />
+  </accelerator>
+</sld>
