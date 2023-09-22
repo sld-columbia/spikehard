@@ -9,6 +9,7 @@ Environment setup:
 git clone --recursive --depth 1 --branch 87f0e1f1325b4e210bee358b898499b3e27fdf7f https://github.com/sld-columbia/esp.git
 git clone https://github.com/sld-columbia/spikehard.git
 cd spikehard
+sudo apt install iverilog # install Icarus Verilog
 script/install_env.sh
 source script/setup_env.sh
 ```
