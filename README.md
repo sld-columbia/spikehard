@@ -34,7 +34,7 @@ To synthesise an implementation with 32x32 VMM-O and deploy it to FPGA, all nece
 ```bash
 python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -s
 ```
-This generates a new SoC and opens the ESP SoC Generator GUI. Be sure to include in the SoC an instance of SpikeHard with implementation `basic_dma64` if the CPU is 64-bit, or `basic_dma32` if the CPU is 32-bit; **never use `impl`**. After configuration, the SoC will be synthesised and "unprepared". To prepare the SoC, run: 
+This generates a new SoC and opens the ESP SoC Generator GUI. Be sure to include in the SoC an instance of SpikeHard with implementation `basic_dma64` if the CPU is 64-bit, or `basic_dma32` if the CPU is 32-bit; **never use `impl`**. After configuration, the SoC will be synthesised then "unprepared". To prepare the SoC, run: 
 ```bash
 python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -p
 ```
