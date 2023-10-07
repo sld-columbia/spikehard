@@ -45,17 +45,19 @@ class fpga_util():
     au.finalise()
 
   def synthesise(self):
-    self.__gen_app()
     assert not os.path.exists(self.prepared_path), self.prepared_path
     self.run_cmd('cp -r "{}" "{}"'.format(self.factory_path, self.prepared_path))
+    self.__gen_app()
     self.run_cmd('bash "{}/script/run_vivado_syn.sh" --config'.format(ROOT_DIR))
     self.unprepare()
 
   def prepare_to_run(self):
+    assert not os.path.exists(self.prepared_path), self.prepared_path
     self.run_cmd('mv "{}" "{}"'.format(self.unprepared_path, self.prepared_path))
     self.__gen_app()
 
   def unprepare(self):
+    assert not os.path.exists(self.unprepared_path), self.unprepared_path
     self.run_cmd('mv "{}" "{}"'.format(self.prepared_path, self.unprepared_path))
 
 
