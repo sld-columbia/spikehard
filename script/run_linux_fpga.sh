@@ -6,7 +6,7 @@ manual="false"
 spikehard_root_dir=$(dirname "$(dirname "$(readlink -f "$0")")")
 esp_root_dir="${spikehard_root_dir}/../esp"
 app_root_dir="${spikehard_root_dir}/hardware"
-soc="xilinx-vcu128-xcvu37p"
+soc="xilinx-vcu128-xcvu37p-spikehard"
 param_ptr=""
 for arg in "$@"
 do
@@ -53,5 +53,3 @@ make linux -j 8
 make fpga-program
 
 (sleep 4s && make fpga-run-linux)
-
-rm -f ${esp_root_dir}/accelerators/rtl/${app}

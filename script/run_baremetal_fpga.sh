@@ -6,7 +6,7 @@ manual="false"
 spikehard_root_dir=$(dirname "$(dirname "$(readlink -f "$0")")")
 esp_root_dir="${spikehard_root_dir}/../esp"
 app_root_dir="${spikehard_root_dir}/hardware"
-soc="xilinx-vcu128-xcvu37p"
+soc="xilinx-vcu128-xcvu37p-spikehard"
 param_ptr=""
 fast="false"
 for arg in "$@"
@@ -59,5 +59,3 @@ if [[ ${fast} == "false" ]]; then
 fi
 
 (sleep 4s && TEST_PROGRAM=./soft-build/${cpu}/baremetal/${app}.exe make fpga-run) & (make uart)
-
-rm -f ${esp_root_dir}/accelerators/rtl/${app}

@@ -1,19 +1,19 @@
-# SpikeHard: Efficiency-Driven Neuromorphic Hardware for Heterogeneous Systems-on-Chip
+# SpikeHard
 
-SpikeHard is an open-source, runtime-programmable neuromorphic hardware accelerator for [ESP](https://www.esp.cs.columbia.edu/) SoCs.
+This is the open-source release of "SpikeHard: Efficiency-Driven Neuromorphic Hardware for Heterogeneous Systems-on-Chip" ([paper link](https://dl.acm.org/doi/full/10.1145/3609101)). To cite this repository, please refer to the [citation](#Citation) subsection. This repository includes all code and scripts needed to generate a SpikeHard accelerator and integrate it into an [ESP](https://www.esp.cs.columbia.edu/) SoC.
 
 ## Quick Start
 
 Environment setup:
 ```bash
-git clone --recursive --depth 1 --branch 87f0e1f1325b4e210bee358b898499b3e27fdf7f https://github.com/sld-columbia/esp.git
+git clone --recursive --depth 1 https://github.com/sld-columbia/esp.git
 git clone https://github.com/sld-columbia/spikehard.git
 cd spikehard
 sudo apt install iverilog # install Icarus Verilog
 script/install_env.sh
 source script/setup_env.sh
 ```
-Be sure to clone ESP in the same directory as SpikeHard but **not** inside SpikeHard, and follow the [ESP documentation](https://www.esp.cs.columbia.edu/docs/setup/) to properly setup ESP including the necessary toolchains. SpikeHard has been tested with ESP version: `87f0e1f1325b4e210bee358b898499b3e27fdf7f`. Using later versions of ESP might require reconfiguring the SoC, which we have already done for you in `hardware/util/preconfigured_socs`.
+Be sure to clone ESP in the same directory as SpikeHard but **not** inside SpikeHard, and follow the [ESP documentation](https://www.esp.cs.columbia.edu/docs/setup/) to properly setup ESP including the necessary toolchains.
 
 To restructure the original 64x64 VMM-O model to 32x32 and tune the tick period as well, run the following:
 ```bash
@@ -30,10 +30,16 @@ make clean
 make
 ```
 
-To synthesise an implementation with 32x32 VMM-O and deploy it to FPGA, all necessary environment variables required by ESP, such as the path to your Xilinx Vivado installation, should first be specified. You will also want to change the values in `hardware/util/preconfigured_socs/xilinx-vcu128-xcvu37p/Makefile` so that ESP is able to access your FPGA. Please consult the ESP documentation for more information. Once this is all configured, run:
+To synthesise an implementation with 32x32 VMM-O and deploy it to FPGA, all necessary environment variables required by ESP, such as the path to your Xilinx Vivado installation, should first be specified (see ESP docs). Once this is all configured, run:
 ```bash
-python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -s # generate code & synthesise
-python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -p # prepare synthesised SoC to run
+python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -s
+```
+This generates a new SoC and opens the ESP SoC Generator GUI. Be sure to include in the SoC an instance of SpikeHard with implementation `basic_dma64` if the CPU is 64-bit, or `basic_dma32` if the CPU is 32-bit; **never use `impl`**. After configuration, the SoC will be synthesised and "unprepared". To prepare the SoC, run: 
+```bash
+python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -p
+```
+To deploy on FPGA, you will likely first need to modify values in `esp/socs/xilinx-vcu128-xcvu37p-spikehard/Makefile` so that ESP is able to access your FPGA (see ESP docs). Then run:
+```bash
 script/run_linux_fpga.sh
 ```
 Once logged into the FPGA, you can run a Linux application that offloads VMM-O onto SpikeHard and verifies that it is being executed correctly. To this end, run:
@@ -48,7 +54,7 @@ By default, at the end this will output the overall latency from a single run. T
 -t <n>   number of runs to determine average throughput (used by MNIST, not used by VMM) [default <n>=1]
 -c <n>   number of clock cycles per tick (i.e. tick period) [default is model-specified]
 ```
-Once you are done with running a particular SoC implementation, you should "unprepare" it so that a different implementation can be used instead. To unprepare 32x32 VMM-O for example, run:
+Once you are done with running a particular SoC implementation, you should unprepare it so that a different implementation can be used instead. To unprepare 32x32 VMM-O for example, run:
 ```bash
 python hardware/util/fpga_util.py -c 1 32 32 -m vmm_o -u
 ```

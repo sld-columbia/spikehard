@@ -3,7 +3,7 @@ import sys
 import subprocess
 import pathlib
 
-from common_util import ROOT_DIR, PRECONFIGURED_SOCS_DIR, SYNTHESISED_SOCS_DIR, ESP_SOCS_DIR, DEFAULT_SOC
+from common_util import ROOT_DIR, ESP_SOCS_DIR, DEFAULT_SOC
 from test_util import basic_test_util
 from app_util import app_util
 
@@ -22,13 +22,21 @@ class fpga_util():
     subprocess.run(cmd, check=True, shell=True)
 
   @property
-  def soc_folder_name(self):
-    return "{}-{}-{}-{}-{}".format(self.fpga_name,
+  def factory_path(self):
+    return os.path.join(ESP_SOCS_DIR, self.fpga_name)
+
+  @property
+  def unprepared_path(self):
+    return os.path.join(ESP_SOCS_DIR,
+                        "{}-{}-{}-{}-{}".format(f"{self.fpga_name}-spikehard",
                                    "-".join(self.model_names) if self.folder_prefix is None else self.folder_prefix,
-                                   self.altered, self.num_axons, self.num_neurons)
+                                   self.altered, self.num_axons, self.num_neurons))
+  
+  @property
+  def prepared_path(self):
+    return os.path.join(ESP_SOCS_DIR, f"{self.fpga_name}-spikehard")
 
   def __gen_app(self):
-    # generate app and configure accelerator
     au = app_util(num_axons=self.num_axons, num_neurons=self.num_neurons, minimise_arch_dims=True, num_outputs=self.num_axons, minimise_num_outputs=(
       len(self.model_names) == 1), output_core_x_coordinate=(0 if self.altered else None), output_core_y_coordinate=(0 if self.altered else None))
     for model_name in self.model_names:
@@ -38,28 +46,17 @@ class fpga_util():
 
   def synthesise(self):
     self.__gen_app()
-
-    # make copy of preconfigured SoC
-    self.run_cmd('rm -rf "{}"'.format(os.path.join(ESP_SOCS_DIR, self.fpga_name)))
-    self.run_cmd('cp -r "{}" "{}"'.format(os.path.join(PRECONFIGURED_SOCS_DIR, self.fpga_name),
-                 os.path.join(ESP_SOCS_DIR, self.fpga_name)))
-
-    # run synthesis tool
-    self.run_cmd('bash "{}/script/run_vivado_syn.sh"'.format(ROOT_DIR))
-
+    assert not os.path.exists(self.prepared_path), self.prepared_path
+    self.run_cmd('cp -r "{}" "{}"'.format(self.factory_path, self.prepared_path))
+    self.run_cmd('bash "{}/script/run_vivado_syn.sh" --config'.format(ROOT_DIR))
     self.unprepare()
 
   def prepare_to_run(self):
-    # move from soc-model_name-altered-num_axons-num_neurons
-    self.run_cmd('mv "{}" "{}"'.format(os.path.join(
-      SYNTHESISED_SOCS_DIR, self.soc_folder_name), os.path.join(ESP_SOCS_DIR, self.fpga_name)))
+    self.run_cmd('mv "{}" "{}"'.format(self.unprepared_path, self.prepared_path))
     self.__gen_app()
 
   def unprepare(self):
-    # move to soc-model_name-altered-num_axons-num_neurons
-    pathlib.Path(SYNTHESISED_SOCS_DIR).mkdir(parents=True, exist_ok=True)
-    self.run_cmd('mv "{}" "{}"'.format(os.path.join(ESP_SOCS_DIR, self.fpga_name),
-                 os.path.join(SYNTHESISED_SOCS_DIR, self.soc_folder_name)))
+    self.run_cmd('mv "{}" "{}"'.format(self.prepared_path, self.unprepared_path))
 
 
 def main():

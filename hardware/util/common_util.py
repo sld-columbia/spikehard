@@ -7,8 +7,6 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 HARDWARE_DIR = os.path.join(ROOT_DIR, "hardware")
 IMPL_DIR = os.path.join(HARDWARE_DIR, "hw", "src", "impl")
 TB_DIR = os.path.join(ROOT_DIR, "hardware", "tb")
-PRECONFIGURED_SOCS_DIR = os.path.join(HARDWARE_DIR, "util", "preconfigured_socs")
-SYNTHESISED_SOCS_DIR = os.path.join(HARDWARE_DIR, "util", "synthesised_socs")
 ESP_SOCS_DIR = os.path.join(os.path.dirname(ROOT_DIR), "esp", "socs")
 DEFAULT_SOC = "xilinx-vcu128-xcvu37p"
 
